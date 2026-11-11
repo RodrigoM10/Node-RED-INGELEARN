@@ -8,6 +8,247 @@
         "env": []
     },
     {
+        "id": "tab_modbus_coils",
+        "type": "tab",
+        "label": "Lectura Coils Modbus",
+        "disabled": false,
+        "info": "Lee las 4 primeras Coils (direcciones 0 a 3) de un servidor Modbus TCP simulado con Modbus Slave."
+    },
+    {
+        "id": "tab_csv_analisis",
+        "type": "tab",
+        "label": "Analisis datos.csv",
+        "disabled": false,
+        "info": "a) Valor maximo de la potencia\nb) Valor promedio de la corriente\nLee datos.csv, lo convierte en un array de objetos y calcula ambos valores."
+    },
+    {
+        "id": "tab_ts",
+        "type": "tab",
+        "label": "Subflow Timestamp",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "tab_coils_sf",
+        "type": "tab",
+        "label": "Subflow Lectura Coils",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "tab_csv_max",
+        "type": "tab",
+        "label": "Subflow Maximo CSV",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "tab_motor",
+        "type": "tab",
+        "label": "Control de Motor",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "831c33f1435172c7",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "sf_timestamp",
+        "type": "subflow",
+        "name": "Generador Timestamp",
+        "info": "Al recibir cualquier mensaje comienza a enviar cada 1 s un mensaje con msg.timestamp (string, formato YYYY-MM-DD HH:mm:ss).\nSe detiene al recibir msg.reset = true.",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "sf_func"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 400,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "sf_func",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "icon": "node-red/timer.svg",
+        "status": {
+            "x": 400,
+            "y": 140,
+            "wires": []
+        }
+    },
+    {
+        "id": "sf_coils",
+        "type": "subflow",
+        "name": "Leer Coils Modbus",
+        "info": "Lee coils (FC01) del servidor Modbus Slave (127.0.0.1:502, Slave ID 1).\nPropiedades editables: ADDRESS (direccion inicial) y QUANTITY (cantidad de coils).\nSalida: msg.payload = array de booleanos.",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "sf_coils_func"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 560,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "sf_coils_flex",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "ADDRESS",
+                "type": "num",
+                "value": "0",
+                "ui": {
+                    "label": {
+                        "en-US": "Address"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "num"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "QUANTITY",
+                "type": "num",
+                "value": "4",
+                "ui": {
+                    "label": {
+                        "en-US": "Quantity"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "num"
+                        ]
+                    }
+                }
+            }
+        ],
+        "meta": {},
+        "color": "#E9967A",
+        "status": {
+            "x": 560,
+            "y": 140,
+            "wires": [
+                {
+                    "id": "sf_coils_status",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "sf_csv_max",
+        "type": "subflow",
+        "name": "Maximo columna CSV",
+        "info": "Calcula el valor maximo de una columna de un archivo CSV.\nPropiedades:\n- ARCHIVO: ruta y nombre del archivo (ej: C:\\datos.csv)\n- COLUMNA: nombre de la columna (ej: potencia, corriente, tension)\nSalida: msg.payload = valor maximo.",
+        "category": "",
+        "in": [
+            {
+                "x": 60,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "sf_f_ruta"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 760,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "sf_f_max",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "ARCHIVO",
+                "type": "str",
+                "value": "C:\\datos.csv",
+                "ui": {
+                    "label": {
+                        "en-US": "Ruta y archivo"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "COLUMNA",
+                "type": "str",
+                "value": "potencia",
+                "ui": {
+                    "label": {
+                        "en-US": "Columna"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            }
+        ],
+        "meta": {},
+        "color": "#DEB887",
+        "status": {
+            "x": 760,
+            "y": 140,
+            "wires": [
+                {
+                    "id": "sf_csv_status",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
         "id": "d1da0ec170a4fb30",
         "type": "s7 endpoint",
         "transport": "iso-on-tcp",
@@ -46,6 +287,259 @@
                 "addr": "DB4.X0.1",
                 "name": "Prueba"
             }
+        ]
+    },
+    {
+        "id": "cliente_modbus",
+        "type": "modbus-client",
+        "name": "Modbus Slave local",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "127.0.0.1",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": "1",
+        "commandDelay": "1",
+        "clientTimeout": "1000",
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": "2000",
+        "parallelUnitIdsAllowed": true,
+        "showErrors": false,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "cliente_modbus_sf",
+        "type": "modbus-client",
+        "name": "Modbus Slave local",
+        "clienttype": "tcp",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": false,
+        "failureLogEnabled": true,
+        "tcpHost": "127.0.0.1",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "9600",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": "1",
+        "commandDelay": "1",
+        "clientTimeout": "1000",
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": "2000",
+        "parallelUnitIdsAllowed": true,
+        "showErrors": false,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "grp_motor",
+        "type": "ui_group",
+        "name": "Motor",
+        "tab": "uitab_motor",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "uitab_motor",
+        "type": "ui_tab",
+        "name": "Control de Motor",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "sf_func",
+        "type": "function",
+        "z": "sf_timestamp",
+        "name": "Generar timestamp",
+        "func": "// Formatea la fecha/hora local como \"YYYY-MM-DD HH:mm:ss\"\nconst pad = n => String(n).padStart(2, \"0\");\nfunction ahora() {\n    const d = new Date();\n    return d.getFullYear() + \"-\" + pad(d.getMonth() + 1) + \"-\" + pad(d.getDate()) + \" \" +\n           pad(d.getHours()) + \":\" + pad(d.getMinutes()) + \":\" + pad(d.getSeconds());\n}\n\nlet timer = context.get(\"timer\");\n\n// Si llega msg.reset con valor verdadero: detener la generacion\nif (msg.reset) {\n    if (timer) {\n        clearInterval(timer);\n        context.set(\"timer\", null);\n    }\n    node.status({ fill: \"red\", shape: \"ring\", text: \"detenido\" });\n    return null;\n}\n\n// Cualquier otro mensaje: iniciar (si no estaba ya generando)\nif (!timer) {\n    const enviar = () => node.send({ timestamp: ahora() });\n    enviar();                              // primer timestamp inmediato\n    timer = setInterval(enviar, 1000);     // luego cada 1 segundo\n    context.set(\"timer\", timer);\n    node.status({ fill: \"green\", shape: \"dot\", text: \"generando\" });\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "// Al hacer Deploy o detener Node-RED, limpiar el temporizador\nconst timer = context.get(\"timer\");\nif (timer) clearInterval(timer);",
+        "libs": [],
+        "x": 220,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "sf_coils_func",
+        "type": "function",
+        "z": "sf_coils",
+        "name": "Armar pedido FC01",
+        "func": "// Lee Address y Quantity desde las propiedades del subflow\nconst address  = Number(env.get(\"ADDRESS\"));\nconst quantity = Number(env.get(\"QUANTITY\"));\n\nif (isNaN(address) || isNaN(quantity) || address < 0 || quantity < 1) {\n    node.error(\"ADDRESS o QUANTITY invalidos\", msg);\n    node.status({ fill: \"red\", shape: \"ring\", text: \"parametros invalidos\" });\n    return null;\n}\n\n// Pedido para el nodo Modbus Flex Getter\nmsg.payload = {\n    fc: 1,              // FC01: Read Coils\n    unitid: 1,          // Slave ID configurado en Modbus Slave\n    address: address,\n    quantity: quantity\n};\nmsg.topic = \"Coils \" + address + \" a \" + (address + quantity - 1);\nnode.status({ fill: \"blue\", shape: \"dot\", text: \"Addr \" + address + \" / Qty \" + quantity });\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 80,
+        "wires": [
+            [
+                "sf_coils_flex"
+            ]
+        ]
+    },
+    {
+        "id": "sf_coils_flex",
+        "type": "modbus-flex-getter",
+        "z": "sf_coils",
+        "name": "Flex Getter",
+        "showStatusActivities": true,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "server": "cliente_modbus_sf",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": true,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 410,
+        "y": 80,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "sf_coils_status",
+        "type": "status",
+        "z": "sf_coils",
+        "name": "",
+        "scope": [
+            "sf_coils_func",
+            "sf_coils_flex"
+        ],
+        "x": 400,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "sf_f_ruta",
+        "type": "function",
+        "z": "sf_csv_max",
+        "name": "msg.filename = ARCHIVO",
+        "func": "// Toma la ruta y el archivo desde las propiedades del subflow\nmsg.filename = env.get(\"ARCHIVO\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 200,
+        "y": 80,
+        "wires": [
+            [
+                "sf_file_in"
+            ]
+        ]
+    },
+    {
+        "id": "sf_file_in",
+        "type": "file in",
+        "z": "sf_csv_max",
+        "name": "Leer archivo",
+        "filename": "filename",
+        "filenameType": "msg",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 390,
+        "y": 80,
+        "wires": [
+            [
+                "sf_csv"
+            ]
+        ]
+    },
+    {
+        "id": "sf_csv",
+        "type": "csv",
+        "z": "sf_csv_max",
+        "name": "CSV a array",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 540,
+        "y": 80,
+        "wires": [
+            [
+                "sf_f_max"
+            ]
+        ]
+    },
+    {
+        "id": "sf_f_max",
+        "type": "function",
+        "z": "sf_csv_max",
+        "name": "Calcular maximo",
+        "func": "// msg.payload es un array con un objeto por fila: msg.payload[0].corriente, etc.\nconst columna = String(env.get(\"COLUMNA\")).trim();\nconst filas = msg.payload;\n\nif (!Array.isArray(filas) || filas.length === 0) {\n    node.error(\"El archivo no tiene datos\", msg);\n    return null;\n}\n\n// Busca la columna ignorando espacios en el encabezado (ej: \"potencia  \")\nconst clave = Object.keys(filas[0]).find(k => k.trim() === columna);\nif (clave === undefined) {\n    node.error(\"La columna '\" + columna + \"' no existe. Columnas: \" + Object.keys(filas[0]).join(\", \"), msg);\n    node.status({ fill: \"red\", shape: \"ring\", text: \"columna no encontrada\" });\n    return null;\n}\n\nlet maximo = -Infinity;\nfor (const fila of filas) {\n    const valor = parseFloat(fila[clave]);\n    if (!isNaN(valor) && valor > maximo) maximo = valor;\n}\n\nmsg.payload = maximo;\nmsg.topic = \"Maximo de \" + columna;\nnode.status({ fill: \"green\", shape: \"dot\", text: columna + \" max: \" + maximo });\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "sf_csv_status",
+        "type": "status",
+        "z": "sf_csv_max",
+        "name": "",
+        "scope": [
+            "sf_f_max",
+            "sf_file_in"
+        ],
+        "x": 560,
+        "y": 200,
+        "wires": [
+            []
         ]
     },
     {
@@ -150,5 +644,649 @@
         "x": 480,
         "y": 360,
         "wires": []
+    },
+    {
+        "id": "inject_leer",
+        "type": "inject",
+        "z": "tab_modbus_coils",
+        "name": "Leer cada 1 s",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 120,
+        "wires": [
+            [
+                "getter_coils"
+            ]
+        ]
+    },
+    {
+        "id": "getter_coils",
+        "type": "modbus-getter",
+        "z": "tab_modbus_coils",
+        "name": "Leer 4 Coils (FC01)",
+        "showStatusActivities": true,
+        "showErrors": true,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "unitid": "1",
+        "dataType": "Coil",
+        "adr": "0",
+        "quantity": "4",
+        "server": "cliente_modbus",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 370,
+        "y": 120,
+        "wires": [
+            [
+                "debug_coils"
+            ],
+            [
+                "debug_completo"
+            ]
+        ]
+    },
+    {
+        "id": "debug_coils",
+        "type": "debug",
+        "z": "tab_modbus_coils",
+        "name": "Valores de las Coils",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 620,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "debug_completo",
+        "type": "debug",
+        "z": "tab_modbus_coils",
+        "name": "Respuesta completa",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "comment_csv",
+        "type": "comment",
+        "z": "tab_csv_analisis",
+        "name": "IMPORTANTE: cambiar la ruta del archivo en el nodo 'Leer datos.csv'",
+        "info": "",
+        "x": 290,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "inject_csv",
+        "type": "inject",
+        "z": "tab_csv_analisis",
+        "name": "Iniciar",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 160,
+        "wires": [
+            [
+                "file_in_csv"
+            ]
+        ]
+    },
+    {
+        "id": "file_in_csv",
+        "type": "file in",
+        "z": "tab_csv_analisis",
+        "name": "Leer datos.csv",
+        "filename": "C:\\datos.csv",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 280,
+        "y": 160,
+        "wires": [
+            [
+                "csv_parse"
+            ]
+        ]
+    },
+    {
+        "id": "csv_parse",
+        "type": "csv",
+        "z": "tab_csv_analisis",
+        "name": "CSV a array",
+        "sep": ",",
+        "hdrin": true,
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\n",
+        "temp": "",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 450,
+        "y": 160,
+        "wires": [
+            [
+                "func_max_potencia",
+                "func_prom_corriente"
+            ]
+        ]
+    },
+    {
+        "id": "func_max_potencia",
+        "type": "function",
+        "z": "tab_csv_analisis",
+        "name": "a) Potencia maxima",
+        "func": "// msg.payload es un array con un objeto por fila del CSV\nconst filas = msg.payload;\n\n// Busca la columna 'potencia' (el encabezado puede traer espacios)\nconst clave = Object.keys(filas[0]).find(k => k.trim() === \"potencia\");\n\nlet maximo = -Infinity;\nlet instante = \"\";\n\nfor (const fila of filas) {\n    const valor = parseFloat(fila[clave]);\n    if (!isNaN(valor) && valor > maximo) {\n        maximo = valor;\n        instante = fila.timestamp;\n    }\n}\n\nmsg.payload = maximo;\nmsg.topic = \"Potencia maxima [W]\";\nmsg.instante = instante;\nnode.status({ fill: \"green\", shape: \"dot\", text: \"Max: \" + maximo + \" W\" });\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 120,
+        "wires": [
+            [
+                "debug_max"
+            ]
+        ]
+    },
+    {
+        "id": "func_prom_corriente",
+        "type": "function",
+        "z": "tab_csv_analisis",
+        "name": "b) Corriente promedio",
+        "func": "// msg.payload es un array con un objeto por fila del CSV\nconst filas = msg.payload;\n\n// Busca la columna 'corriente' (el encabezado puede traer espacios)\nconst clave = Object.keys(filas[0]).find(k => k.trim() === \"corriente\");\n\nlet suma = 0;\nlet cantidad = 0;\n\nfor (const fila of filas) {\n    const valor = parseFloat(fila[clave]);\n    if (!isNaN(valor)) {\n        suma += valor;\n        cantidad++;\n    }\n}\n\nconst promedio = cantidad > 0 ? suma / cantidad : 0;\n\nmsg.payload = Number(promedio.toFixed(3));\nmsg.topic = \"Corriente promedio [A]\";\nmsg.muestras = cantidad;\nnode.status({ fill: \"blue\", shape: \"dot\", text: \"Prom: \" + msg.payload + \" A\" });\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 200,
+        "wires": [
+            [
+                "debug_prom"
+            ]
+        ]
+    },
+    {
+        "id": "debug_max",
+        "type": "debug",
+        "z": "tab_csv_analisis",
+        "name": "Potencia maxima",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "debug_prom",
+        "type": "debug",
+        "z": "tab_csv_analisis",
+        "name": "Corriente promedio",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "inj_start",
+        "type": "inject",
+        "z": "tab_ts",
+        "name": "Iniciar",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "start",
+        "payloadType": "str",
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "sf_instance"
+            ]
+        ]
+    },
+    {
+        "id": "inj_reset",
+        "type": "inject",
+        "z": "tab_ts",
+        "name": "Reset (msg.reset = true)",
+        "props": [
+            {
+                "p": "reset",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 160,
+        "wires": [
+            [
+                "sf_instance"
+            ]
+        ]
+    },
+    {
+        "id": "sf_instance",
+        "type": "subflow:sf_timestamp",
+        "z": "tab_ts",
+        "name": "",
+        "x": 410,
+        "y": 130,
+        "wires": [
+            [
+                "debug_ts"
+            ]
+        ]
+    },
+    {
+        "id": "debug_ts",
+        "type": "debug",
+        "z": "tab_ts",
+        "name": "msg.timestamp",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "timestamp",
+        "targetType": "msg",
+        "statusVal": "timestamp",
+        "statusType": "msg",
+        "x": 640,
+        "y": 130,
+        "wires": []
+    },
+    {
+        "id": "inj_coils",
+        "type": "inject",
+        "z": "tab_coils_sf",
+        "name": "Leer cada 1 s",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 140,
+        "wires": [
+            [
+                "sf_inst_a",
+                "sf_inst_b"
+            ]
+        ]
+    },
+    {
+        "id": "sf_inst_a",
+        "type": "subflow:sf_coils",
+        "z": "tab_coils_sf",
+        "name": "Coils 0-3",
+        "env": [
+            {
+                "name": "ADDRESS",
+                "type": "num",
+                "value": "0"
+            },
+            {
+                "name": "QUANTITY",
+                "type": "num",
+                "value": "4"
+            }
+        ],
+        "x": 360,
+        "y": 100,
+        "wires": [
+            [
+                "debug_a"
+            ]
+        ]
+    },
+    {
+        "id": "sf_inst_b",
+        "type": "subflow:sf_coils",
+        "z": "tab_coils_sf",
+        "name": "Coils 4-9",
+        "env": [
+            {
+                "name": "ADDRESS",
+                "type": "num",
+                "value": "4"
+            },
+            {
+                "name": "QUANTITY",
+                "type": "num",
+                "value": "6"
+            }
+        ],
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "debug_b"
+            ]
+        ]
+    },
+    {
+        "id": "debug_a",
+        "type": "debug",
+        "z": "tab_coils_sf",
+        "name": "Resultado A",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 570,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "debug_b",
+        "type": "debug",
+        "z": "tab_coils_sf",
+        "name": "Resultado B",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 570,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "inj_csv_max",
+        "type": "inject",
+        "z": "tab_csv_max",
+        "name": "Calcular",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "inst_pot",
+                "inst_corr"
+            ]
+        ]
+    },
+    {
+        "id": "inst_pot",
+        "type": "subflow:sf_csv_max",
+        "z": "tab_csv_max",
+        "name": "Max potencia",
+        "env": [
+            {
+                "name": "ARCHIVO",
+                "type": "str",
+                "value": "C:\\datos.csv"
+            },
+            {
+                "name": "COLUMNA",
+                "type": "str",
+                "value": "potencia"
+            }
+        ],
+        "x": 330,
+        "y": 100,
+        "wires": [
+            [
+                "dbg_pot"
+            ]
+        ]
+    },
+    {
+        "id": "inst_corr",
+        "type": "subflow:sf_csv_max",
+        "z": "tab_csv_max",
+        "name": "Max corriente",
+        "env": [
+            {
+                "name": "ARCHIVO",
+                "type": "str",
+                "value": "C:\\datos.csv"
+            },
+            {
+                "name": "COLUMNA",
+                "type": "str",
+                "value": "corriente"
+            }
+        ],
+        "x": 330,
+        "y": 180,
+        "wires": [
+            [
+                "dbg_corr"
+            ]
+        ]
+    },
+    {
+        "id": "dbg_pot",
+        "type": "debug",
+        "z": "tab_csv_max",
+        "name": "Potencia maxima",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 550,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "dbg_corr",
+        "type": "debug",
+        "z": "tab_csv_max",
+        "name": "Corriente maxima",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 550,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "btn_start",
+        "type": "ui_button",
+        "z": "tab_motor",
+        "name": "ARRANCAR",
+        "group": "grp_motor",
+        "order": 3,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "label": "ARRANCAR",
+        "tooltip": "",
+        "color": "white",
+        "bgcolor": "green",
+        "className": "",
+        "icon": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "topic": "",
+        "topicType": "str",
+        "x": 180,
+        "y": 100,
+        "wires": [
+            [
+                "tmpl_imagen",
+                "tmpl_led"
+            ]
+        ]
+    },
+    {
+        "id": "btn_stop",
+        "type": "ui_button",
+        "z": "tab_motor",
+        "name": "PARAR",
+        "group": "grp_motor",
+        "order": 4,
+        "width": "3",
+        "height": "1",
+        "passthru": false,
+        "label": "PARAR",
+        "tooltip": "",
+        "color": "white",
+        "bgcolor": "red",
+        "className": "",
+        "icon": "",
+        "payload": "false",
+        "payloadType": "bool",
+        "topic": "",
+        "topicType": "str",
+        "x": 180,
+        "y": 160,
+        "wires": [
+            [
+                "tmpl_imagen",
+                "tmpl_led"
+            ]
+        ]
+    },
+    {
+        "id": "tmpl_imagen",
+        "type": "ui_template",
+        "z": "tab_motor",
+        "group": "grp_motor",
+        "name": "Imagen",
+        "order": 1,
+        "width": "6",
+        "height": "3",
+        "format": "<div style=\"text-align:center\">\n  <svg viewBox=\"0 0 200 110\" width=\"220\">\n    <rect x=\"20\" y=\"25\" width=\"110\" height=\"65\" rx=\"10\"\n          ng-attr-fill=\"{{msg.payload ? '#2e7d32' : '#607d8b'}}\"/>\n    <rect x=\"130\" y=\"52\" width=\"30\" height=\"10\" fill=\"#9e9e9e\"/>\n    <circle cx=\"170\" cy=\"57\" r=\"18\" fill=\"#cfd8dc\" stroke=\"#555\" stroke-width=\"2\"/>\n    <text x=\"75\" y=\"63\" text-anchor=\"middle\" fill=\"white\" font-size=\"16\">M1</text>\n  </svg>\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 420,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "tmpl_led",
+        "type": "ui_template",
+        "z": "tab_motor",
+        "group": "grp_motor",
+        "name": "LED",
+        "order": 2,
+        "width": "6",
+        "height": "1",
+        "format": "<div style=\"display:flex; align-items:center; gap:10px\">\n  <div style=\"width:28px; height:28px; border-radius:50%\"\n       ng-style=\"{'background': msg.payload ? 'lime' : 'red'}\"></div>\n  <b>{{ msg.payload ? 'EN MARCHA' : 'DETENIDO' }}</b>\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 420,
+        "y": 160,
+        "wires": [
+            []
+        ]
     }
 ]
