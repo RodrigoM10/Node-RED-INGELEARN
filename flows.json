@@ -1,13 +1,5 @@
 [
     {
-        "id": "8475a156ead4f48b",
-        "type": "tab",
-        "label": "Flow 1",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "tab_modbus_coils",
         "type": "tab",
         "label": "Lectura Coils Modbus",
@@ -541,109 +533,6 @@
         "wires": [
             []
         ]
-    },
-    {
-        "id": "d659a62a4ae5249a",
-        "type": "s7 in",
-        "z": "8475a156ead4f48b",
-        "endpoint": "d1da0ec170a4fb30",
-        "mode": "single",
-        "variable": "Salida_1",
-        "diff": true,
-        "name": "",
-        "x": 240,
-        "y": 180,
-        "wires": [
-            [
-                "57d0a777746f06e6"
-            ]
-        ]
-    },
-    {
-        "id": "57d0a777746f06e6",
-        "type": "debug",
-        "z": "8475a156ead4f48b",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 480,
-        "y": 180,
-        "wires": []
-    },
-    {
-        "id": "cc355ecefc585ec1",
-        "type": "inject",
-        "z": "8475a156ead4f48b",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "true",
-        "payloadType": "bool",
-        "x": 250,
-        "y": 300,
-        "wires": [
-            [
-                "9e0639218c49facb"
-            ]
-        ]
-    },
-    {
-        "id": "dcb40d82c9d79bed",
-        "type": "inject",
-        "z": "8475a156ead4f48b",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "false",
-        "payloadType": "bool",
-        "x": 250,
-        "y": 400,
-        "wires": [
-            [
-                "9e0639218c49facb"
-            ]
-        ]
-    },
-    {
-        "id": "9e0639218c49facb",
-        "type": "s7 out",
-        "z": "8475a156ead4f48b",
-        "endpoint": "d1da0ec170a4fb30",
-        "variable": "Salida_1",
-        "name": "",
-        "x": 480,
-        "y": 360,
-        "wires": []
     },
     {
         "id": "inject_leer",
